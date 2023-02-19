@@ -1,27 +1,24 @@
-
 const mysql = require('mysql2');
+const config = require('../config/default');
 
-// créez une connexion à la base de données
 const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'onepiece',
-  database: 'test'
-});
+    
+    host: config.db.host,
+    user: config.db.user,
+    password: config.db.password,
+    database: config.db.database,
+    jwtSecret:config.jwtSecret
+  });
 
-// connectez-vous à la base de données
-connection.connect((err) => {
-  if (err) {
-    console.error('Error connecting to database: ' + err.stack);
-    return;
-  }
-  console.log('Connected to database as id ' + connection.threadId);
-});
+  connection.connect((err) => {
+    if (err) {
+      console.error('Error connecting to database: ' + err.stack);
+      return;
+    }
+    console.log('Connected to database as id ' + connection.threadId);
+  });
 
-
-
-
-const users=`
+  const users=`
 CREATE TABLE IF NOT EXISTS users (
   users_id INT AUTO_INCREMENT PRIMARY KEY,
   firstName VARCHAR(255) NOT NULL,
@@ -81,7 +78,7 @@ CREATE TABLE IF NOT EXISTS signals (
   const posts=`
   CREATE TABLE IF NOT EXISTS posts (
     posts_id INT AUTO_INCREMENT PRIMARY KEY,
-    nom VARCHAR(225)),
+    name VARCHAR(225),
     description VARCHAR(255),
     imageUrl VARCHAR(255),
     videoUrl VARCHAR(255) )
@@ -104,7 +101,11 @@ CREATE TABLE IF NOT EXISTS signals (
   });
   connection.query(chanels, (err, result) => {
     if (err) throw err;
-    console.log('Table AInotifications created');
+    console.log('Table chanels created');
+  });
+  connection.query(posts, (err, result) => {
+    if (err) throw err;
+    console.log('Table posts created');
   });
   connection.query(signals, (err, result) => {
     if (err) throw err;

@@ -1,30 +1,32 @@
 const express = require("express");
 const app = express();
+const bodyParser = require('body-parser');
+const usersRoutes = require('./src/Routes/userRoutes');
 const cors=require("cors");
-const connection=require("./Model/db")
-const jwt=require('jsonwebtoken');
-
-
+//const jwt=require('jsonwebtoken');
 app.use(cors());
 app.use(express.json());
 app.listen(5000, () => {
     console.log("Server running on port 5000.");
   });
 
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json());
+  app.use('/', usersRoutes);
 //Routest
 //post 
-app.post("/users", (req, res) => {
-    const { firstName,lastName,email,password } = req.body;
+// app.post("/users", (req, res) => {
+//     const { firstName,lastName,email,password } = req.body;
  
-    const sql = "INSERT INTO users (firstName,lastName,email,password) VALUES (?,?,?,?)";
-    connection.query(sql, [firstName,lastName,email,password], (err, result) => {
-      if (err) {
-        console.error(err.message);
-        return res.status(500).send("Error occurred while inserting data.");
-      }
-      res.send("Data inserted successfully.");
-    });
-  });
+//     const sql = "INSERT INTO users (firstName,lastName,email,password) VALUES (?,?,?,?)";
+//     connection.query(sql, [firstName,lastName,email,password], (err, result) => {
+//       if (err) {
+//         console.error(err.message);
+//         return res.status(500).send("Error occurred while inserting data.");
+//       }
+//       res.send("Data inserted successfully.");
+//     });
+//   });
 
 
 
@@ -67,22 +69,7 @@ app.delete('/users/:id',verify,(req,res)=>{
   }
 });
   
-  app.post('/login',(req,res)=>{
-   const {email,password}=req.body;
-   const query = `SELECT * FROM users WHERE email = '${email}' AND password = '${password}'`;
-   connection.query(query, (err, results) => {
-    if (err) throw err;
-    const user = results[0];
-  if(user){
-  // generate access token 
-  const accessToken=jwt.sign({id:user.id,isAdmin:user.isAdmin},'mySecretKey',{expiresIn:"15m"});
-  res.json({
-    userName:user.userName,isAdmin:user.isAdmin,accessToken})
-  }else{
-  res.status(400).json("username or parssword incorrect");
-  }
-})
-  });
+
 
   app.post("/register", (req, res) => {
     let data = {firstName: req.body.fistName,lastName:req.body.lastName, email: req.body.email, password: req.body.password};
@@ -92,3 +79,6 @@ app.delete('/users/:id',verify,(req,res)=>{
       res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
     });
   });
+
+
+  module.exports=app;
