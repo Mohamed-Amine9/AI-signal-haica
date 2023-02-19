@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS radios (
   radios_id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255),
   description VARCHAR(255),
-  url VARCHAR(255) NOT NULL) 
+  url VARCHAR(255) NOT NULL ) 
   `;
 
   const chanels=`

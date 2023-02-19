@@ -53,3 +53,20 @@ exports.deleteRadio=(req,res)=>{
         res.send("Data deleted successfully.");
         });
 };
+
+exports.updateRadio=(req, res) => {
+  const { id } = req.params;
+  const { name,description,url } = req.body;
+
+  const sql = "UPDATE radios SET description=? ,name=?,url=? where radios_id=?";
+  connection.query(sql, [name,description,url,id], (err, result) => {
+    if (err) {
+      console.error(err.message);
+      return res.status(500).send("Error occurred while updating data.");
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).send("Radio not found.");
+    }
+    res.send("Data updated successfully.");
+  });
+};

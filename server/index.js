@@ -2,8 +2,13 @@ const express = require("express");
 const app = express();
 const bodyParser = require('body-parser');
 const usersRoutes = require('./src/Routes/userRoutes');
+const postsRoutes = require('./src/Routes/postsRoutes');
+const radiosRoutes = require('./src/Routes/radiosRoutes');
+const chanelsRoutes = require('./src/Routes/chanelsRoutes');
 const cors=require("cors");
 //const jwt=require('jsonwebtoken');
+
+
 app.use(cors());
 app.use(express.json());
 app.listen(5000, () => {
@@ -13,7 +18,12 @@ app.listen(5000, () => {
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
   app.use('/', usersRoutes);
-//Routest
+  app.use('/', postsRoutes);
+  app.use('/', radiosRoutes);
+  app.use('/', chanelsRoutes);
+
+
+  //Routest
 //post 
 // app.post("/users", (req, res) => {
 //     const { firstName,lastName,email,password } = req.body;

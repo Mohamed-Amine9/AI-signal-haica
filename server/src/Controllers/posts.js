@@ -51,3 +51,20 @@ exports.deletePost=(req,res)=>{
         res.send("Data deleted successfully.");
         });
 };
+
+exports.updatePost=(req, res) => {
+  const { id } = req.params;
+  const { description,imageUrl,videoUrl } = req.body;
+
+  const sql = "UPDATE posts SET description=? ,imageUrl=?,videoUrl=? where posts_id=?";
+  connection.query(sql, [description,imageUrl,videoUrl, id], (err, result) => {
+    if (err) {
+      console.error(err.message);
+      return res.status(500).send("Error occurred while updating data.");
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).send("Post not found.");
+    }
+    res.send("Data updated successfully.");
+  });
+};
