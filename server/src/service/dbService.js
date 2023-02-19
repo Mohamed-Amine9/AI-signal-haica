@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS chanels (
   const signals=`
 CREATE TABLE IF NOT EXISTS signals (
   signals_id INT AUTO_INCREMENT PRIMARY KEY,
-  date DATE NOT NULL,
+  date DATE ,
   description VARCHAR(255) NOT NULL)`;
 
   const posts=`

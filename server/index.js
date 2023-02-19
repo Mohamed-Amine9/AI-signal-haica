@@ -5,6 +5,7 @@ const usersRoutes = require('./src/Routes/userRoutes');
 const postsRoutes = require('./src/Routes/postsRoutes');
 const radiosRoutes = require('./src/Routes/radiosRoutes');
 const chanelsRoutes = require('./src/Routes/chanelsRoutes');
+const signalsRoutes = require('./src/Routes/signalsRoutes');
 const cors=require("cors");
 //const jwt=require('jsonwebtoken');
 
@@ -21,6 +22,7 @@ app.listen(5000, () => {
   app.use('/', postsRoutes);
   app.use('/', radiosRoutes);
   app.use('/', chanelsRoutes);
+  app.use('/', signalsRoutes);
 
 
   //Routest
