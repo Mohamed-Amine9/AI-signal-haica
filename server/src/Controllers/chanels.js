@@ -1,18 +1,18 @@
 
 const connection=require("../service/dbService");
+const centralController = require('./centralController');
+const table="chanels";
+
+
+
+
 
 //getAll chanels
 exports.getChanels=(req,res)=>{
-    const query = "SELECT * FROM chanels";
-    connection.query(query, (err, rows) => {
-      if (err) { 
-        console.error(err.message);
-        return res.status(500).send("Error occurred while fetching data.");
-      }
-      res.status(400).json(rows);
-    })
-  
+  centralController.getAll(req,res,table)
    };  
+
+   
 //get chanel By Name method
 exports.getChanel=(req,res)=>{
     const { name } = req.params;

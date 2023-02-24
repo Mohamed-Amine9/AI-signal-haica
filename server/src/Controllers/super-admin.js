@@ -1,16 +1,16 @@
 const connection=require("../service/dbService");
-const jwt=require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const centralController = require('./centralController');
+const table="super_admin";
 
-//   app.post("/admin", (req, res) => {
-//     const { userName,password,isAdmin } = req.body;
+exports.addSuperAdmin=(req,res)=>{
+    const { firstName,lastName,role,email,password  } = req.body;
  
-//     const sql = "INSERT INTO users (userName,password,isAdmin) VALUES (?,?,?)";
-//     connection.query(sql, [userName,password,isAdmin], (err, result) => {
-//       if (err) {
-//         console.error(err.message);
-//         return res.status(500).send("Error occurred while inserting data.");
-//       }
-//       res.send("Data inserted successfully.");
-//     });
-//   });
+    const sql = "INSERT INTO super_admin (firstName,lastName,email,password ) VALUES(?,?,?,?)";
+    connection.query(sql, [firstName,lastName,role,email,password ], (err, result) => {
+      if (err) {
+        console.error(err.message);
+        return res.status(500).send("Error occurred while inserting data.");
+      }
+      res.send("Data inserted successfully.");
+    });
+};

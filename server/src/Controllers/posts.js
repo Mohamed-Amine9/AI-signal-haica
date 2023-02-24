@@ -1,34 +1,24 @@
 const connection=require("../service/dbService");
-
+const central = require('./centralController');
+const table = {
+  name:"post",
+  id:"post_id"
+}
 exports.getPosts=(req,res)=>{
-    const query = "SELECT * FROM posts";
-    connection.query(query, (err, rows) => {
-      if (err) { 
-        console.error(err.message);
-        return res.status(500).send("Error occurred while fetching data.");
-      }
-      res.status(400).json(rows);
-    })
-  
+   central.getAll(req,res,table.name);
    };  
 
    exports.getPost=(req,res)=>{
-    const { id } = req.params;
-    const query = "SELECT * FROM posts where id=?";
-    connection.query(query,[id], (err, rows) => {
-      if (err) { 
-        console.error(err.message);
-        return res.status(500).send("Error occurred while fetching data.");
-      }
-      res.status(400).json(rows);
-    })
-  
+    if(isNaN(req.params.input)===false){
+      return central.getById(req,res,table.name,table.id);
+    }
+      return central.getByName(req,res,table.name);
    };
 
    exports.addPost=(req,res)=>{
     const { name,description,imageUrl,videoUrl } = req.body;
  
-    const sql = "INSERT INTO posts (name,description,imageUrl,videoUrl) VALUES(?,?,?,?)";
+    const sql = "INSERT INTO post (name,description,imageUrl,videoUrl) VALUES(?,?,?,?)";
     connection.query(sql, [name,description,imageUrl,videoUrl], (err, result) => {
       if (err) {
         console.error(err.message);

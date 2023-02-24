@@ -3,9 +3,9 @@ const router = express.Router();
 const radios =require('../Controllers/radios');
 
 router.get("/radios",radios.getRadios);
-router.get("/radios/:name",radios.getRadio);
+router.get("/radios/:input",radios.getRadio);
 router.post("/radios",radios.addRadio);
-router.delete("/radios/:name",radios.deleteRadio);
-router.put("/radios/:id",radios.updateRadio);
+router.delete("/radios/:input",radios.deleteRadio);
+router.put("/radios/:input",radios.updateRadio);
 
 module.exports=router;

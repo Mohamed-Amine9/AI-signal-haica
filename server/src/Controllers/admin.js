@@ -1,57 +1,70 @@
-// const express = require("express");
-// const app = express();
-// const cors=require("cors");
-// const connection=require("./Model/db")
-// const jwt=require('jsonwebtoken');
+const connection=require("../service/dbService");
+const jwt=require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const centralController = require('./centralController');
+const table="admins";
 
 
-// app.use(cors());
-// app.use(express.json());
-// app.listen(5000, () => {
-//     console.log("Server running on port 5000.");
-//   });
+exports.getAdmins=(req,res)=>{
+    
+  centralController.getAll(red,res,table);
+   };  
 
-//   //get users
-//     app.get("/users", (req, res) => {
-//         const sql = "SELECT * FROM users";
-//         connection.query(sql, (err, rows) => {
-//           if (err) {
-//             console.error(err.message);
-//             return res.status(500).send("Error occurred while fetching data.");
-//           }
-//           res.send(rows);
-//         });
-//       });
+   
+   exports.getAdmin=(req,res)=>{
+    const { name } = req.params;
+    const query = "SELECT * FROM admins where name=?";
+    connection.query(query,[name], (err, rows) => {
+      if (err) { 
+        console.error(err.message);
+        return res.status(500).send("Error occurred while fetching data.");
+      }
+      res.status(400).json(rows);
+    })
+  
+   };  
+exports.addAdmin=(req, res) => {
+     const { firstName,lastName,email,password } = req.body;
+ 
+     const sql = "INSERT INTO users (firstName,lastName,email,password) VALUES (?,?,?,?)";
+     connection.query(sql, [firstName,lastName,email,password], (err, result) => {
+       if (err) {
+         console.error(err.message);
+         return res.status(500).send("Error occurred while inserting data.");
+       }
+       res.send("Data inserted successfully.");
+     });
+   };
 
-      
-//  //get user by id
-//     app.get("/users/:id", (req, res) => {
-//         const { id } = req.params;
-//         const sql = "SELECT * FROM users WHERE id = ?";
-//         connection.query(sql, [id], (err, rows) => {
-//         if (err) {
-//             console.error(err.message);
-//             return res.status(500).send("Error occurred while fetching data.");
-//         }
-//         if (!rows.length) {
-//             return res.status(404).send("User not found.");
-//         }
-//         res.send(rows[0]);
-//         });
-//     });
-// //delete user
-// app.delete("/users/:id", (req, res) => {
-//     const { id } = req.params;
-//     const sql = "DELETE FROM users WHERE id = ?";
-//     connection.query(sql, [id],(err, result) => {
-//         if (err) {
-//         console.error(err.message);
-//         return res.status(500).send("Error occurred while deleting data.");
-//         }
-//         if (result.affectedRows === 0) {
-//         return res.status(404).send("User not found.");
-//         }else{
-//         res.send("Data deleted successfully.");
-//         }
-//         });
-//         });
+
+   exports.deleteAdmin=(req,res)=>{
+    const { name } = req.params;
+    const sql = "DELETE FROM admins WHERE name = ?";
+    connection.query(sql, [name],(err, result) => {
+        if (err) {
+        console.error(err.message);
+        return res.status(500).send("Error occurred while deleting data.");
+        }
+        if (result.affectedRows === 0) {
+        return res.status(404).send("Admin not found.");
+        }
+        res.send("Data deleted successfully.");
+        });
+};
+
+exports.updateAdmin=(req, res) => {
+    const { id } = req.params;
+    const { firstName,lastName,email,password} = req.body;
+  
+    const sql = "UPDATE admins SET lastName=? ,firstName=?,email=? ,password=? where radios_id=?";
+    connection.query(sql, [firstName,lastName,email,password,id], (err, result) => {
+      if (err) {
+        console.error(err.message);
+        return res.status(500).send("Error occurred while updating data.");
+      }
+      if (result.affectedRows === 0) {
+        return res.status(404).send("Admin not found.");
+      }
+      res.send("Data updated successfully.");
+    });
+  };

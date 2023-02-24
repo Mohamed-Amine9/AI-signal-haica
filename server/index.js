@@ -1,12 +1,14 @@
 const express = require("express");
 const app = express();
+const cors=require("cors");
 const bodyParser = require('body-parser');
 const usersRoutes = require('./src/Routes/userRoutes');
 const postsRoutes = require('./src/Routes/postsRoutes');
 const radiosRoutes = require('./src/Routes/radiosRoutes');
 const chanelsRoutes = require('./src/Routes/chanelsRoutes');
 const signalsRoutes = require('./src/Routes/signalsRoutes');
-const cors=require("cors");
+const adminRoutes = require('./src/Routes/adminRoutes');
+const super_adminRoutes = require('./src/Routes/super_adminRoutes');
 //const jwt=require('jsonwebtoken');
 
 
@@ -23,6 +25,8 @@ app.listen(5000, () => {
   app.use('/', radiosRoutes);
   app.use('/', chanelsRoutes);
   app.use('/', signalsRoutes);
+  app.use('/', adminRoutes);
+  app.use('/', super_adminRoutes);
 
 
   //Routest

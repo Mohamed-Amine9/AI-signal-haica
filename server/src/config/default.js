@@ -6,7 +6,8 @@ const config = {
       password: 'onepiece',
       database: 'test'
     },
-    jwtSecret: 'mySecretKey'
+    jwtSecret: 'mySecretKey',
+    jwtRefreshKey:'jwtRefreshKey'
   };
 
   module.exports=config
