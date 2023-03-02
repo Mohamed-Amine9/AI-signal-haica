@@ -1,4 +1,7 @@
 const express = require("express");
+const helmet = require("helmet");
+const db=require("./src/config/default")
+const dotenv = require('dotenv');
 const app = express();
 const cors=require("cors");
 const bodyParser = require('body-parser');
@@ -11,11 +14,12 @@ const adminRoutes = require('./src/Routes/adminRoutes');
 const super_adminRoutes = require('./src/Routes/super_adminRoutes');
 //const jwt=require('jsonwebtoken');
 
-
+dotenv.config();
 app.use(cors());
 app.use(express.json());
-app.listen(5000, () => {
-    console.log("Server running on port 5000.");
+app.use(helmet());
+app.listen(db.port, () => {
+   console.log("Server running on port ",db.port);
   });
 
   app.use(bodyParser.urlencoded({ extended: true }));

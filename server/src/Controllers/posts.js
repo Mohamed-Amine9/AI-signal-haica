@@ -4,20 +4,23 @@ const table = {
   name:"post",
   id:"post_id"
 }
+
+
 exports.getPosts=(req,res)=>{
-   central.getAll(req,res,table.name);
-   };  
+    central.getAll(req,res,table.name);
+};  
 
-   exports.getPost=(req,res)=>{
-    if(isNaN(req.params.input)===false){
-      return central.getById(req,res,table.name,table.id);
-    }
-      return central.getByName(req,res,table.name);
-   };
 
-   exports.addPost=(req,res)=>{
+exports.getPost=(req,res)=>{
+  if(isNaN(req.params.input)){
+    return central.getByName(req,res,table.name);
+  }
+    return central.getById(req,res,table.name,table.id);
+};
+
+  
+exports.addPost=(req,res)=>{
     const { name,description,imageUrl,videoUrl } = req.body;
- 
     const sql = "INSERT INTO post (name,description,imageUrl,videoUrl) VALUES(?,?,?,?)";
     connection.query(sql, [name,description,imageUrl,videoUrl], (err, result) => {
       if (err) {
@@ -27,19 +30,13 @@ exports.getPosts=(req,res)=>{
       res.send("Data inserted successfully.");
     });
 };
+
 exports.deletePost=(req,res)=>{
-    const { description } = req.params;
-    const sql = "DELETE FROM posts WHERE description= ?";
-    connection.query(sql, [description],(err, result) => {
-        if (err) {
-        console.error(err.message);
-        return res.status(500).send("Error occurred while deleting data.");
-        }
-        if (result.affectedRows === 0) {
-        return res.status(404).send("post not found.");
-        }
-        res.send("Data deleted successfully.");
-        });
+  if(isNaN(req.params.input)){
+    return central.deleteByName(req,res,table.name);
+  }
+    return central.deleteById(req,res,table.name,table.id);
+  
 };
 
 exports.updatePost=(req, res) => {

@@ -4,10 +4,10 @@ const chanels =require('../Controllers/chanels');
 
 
 router.get("/chanels",chanels.getChanels);
-router.get("/chanels/:name",chanels.getChanel);
+router.get("/chanels/:input",chanels.getChanel);
 router.post("/chanels",chanels.addChanel);
-router.delete("/chanels/:name",chanels.deleteChanel);
-router.put("/chanels/:name",chanels.updateChanel);
+router.delete("/chanels/:input",chanels.deleteChanel);
+router.put("/chanels/:input",chanels.updateChanel);
 
 
 module.exports=router;

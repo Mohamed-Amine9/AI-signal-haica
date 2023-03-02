@@ -8,7 +8,9 @@ const connection = mysql.createConnection({
     password: config.db.password,
     database: config.db.database,
     jwtSecret:config.jwtSecret,
-    jwtRefreshKey:config.jwtRefreshKey
+    jwtExpiration:config.jwtExpiration,
+    jwtRefresh:config.jwtRefresh,
+    jwtRefreshExpiration:config.jwtRefreshExpiration
   });
 
   connection.connect((err) => {
@@ -22,14 +24,14 @@ const connection = mysql.createConnection({
 
   const user=`
 CREATE TABLE IF NOT EXISTS user (
-  user_id INT AUTO_INCREMENT PRIMARY KEY,
-  firstName VARCHAR(255) NOT NULL,
-  lastName VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL,
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  firstName VARCHAR(255) ,
+  lastName VARCHAR(255) ,
+  email VARCHAR(255) ,
   age INT ,
   gender ENUM('male', 'female', 'other') DEFAULT 'other',
-  role ENUM('super_admin', 'admin', 'user') DEFAULT 'user',
-  password VARCHAR(255) NOT NULL
+  password VARCHAR(255),
+  refresh_token VARCHAR(255)
 
 )`;
 const admin=`
@@ -85,6 +87,14 @@ CREATE TABLE IF NOT EXISTS chanel (
     imageUrl VARCHAR(255),
     videoUrl VARCHAR(255) )
     `;
+   const session=` CREATE TABLE IF NOT EXISTS session (
+      session_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+      user_id INT NOT NULL,
+      refresh_token VARCHAR(255) NOT NULL,
+      created_at DATETIME NOT NULL,
+      updated_at DATETIME NOT NULL,
+      FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
+    )`;
   connection.query(user, (err, result) => {
     if (err) throw err;
     console.log('Table users created');
@@ -112,6 +122,10 @@ CREATE TABLE IF NOT EXISTS chanel (
   connection.query(signals, (err, result) => {
     if (err) throw err;
     console.log('Table signal created');
+  });
+  connection.query(session, (err, result) => {
+    if (err) throw err;
+    console.log('Table session created');
   });
   
 

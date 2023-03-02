@@ -1,55 +1,22 @@
 const connection=require("../service/dbService");
-const jwt=require('jsonwebtoken');
-const centralController = require('./centralController');
-const table="users";
+const jwt = require('jsonwebtoken');
+const central = require('./centralController');
 const bcrypt = require('bcrypt');
-const mysql = require('mysql');
 
 
+const table={
+name:"user"
+}
 
-
-// Register user
-exports.register = (req, res) => {
-  const { email, password } = req.body;
-
-  // Check if user already exists
-  const selectQuery = `SELECT * FROM users WHERE email = '${email}'`;
-  connection.query(selectQuery, (error, results) => {
-    if (error) {
-      res.status(500).json({ message: 'Error checking for user' });
-    } else {
-      if (results.length > 0) {
-        res.status(400).json({ message: 'User already exists' });
-      } else {
-        // Insert user into database
-        const insertQuery = `INSERT INTO users (email, password) VALUES ('${email}', '${password}')`;
-        connection.query(insertQuery, (error, results) => {
-          if (error) {
-            res.status(500).json({ message: 'Error registering user' });
-          } else {
-            // Create initial access token
-            const accessToken = jwt.sign({ email }, 'jwtSecretKey', { expiresIn: '15m' });
-            // Create initial refresh token
-            const refreshToken = jwt.sign({ email }, 'jwtRefreshKey', { expiresIn: '1d' });
-            // Save refresh token to database
-            const updateQuery = `UPDATE users SET refresh_token = '${refreshToken}' WHERE email = '${email}'`;
-            connection.query(updateQuery, (error, results) => {
-              if (error) {
-                res.status(500).json({ message: 'Error saving refresh token' });
-              } else {
-                res.json({ message: 'User registered', accessToken, refreshToken });
-              }
-            });
-          }
-        });
-      }
-    }
-  });
+exports.register=(req,res)=>{
+  central.signUp(req, res, table.name);
 };
 
+exports.login=(req,res)=>{
+    central.loginUser(req,res,table.name);
+}
 
-
-
+// Register user
 
  /*exports.login=(req,res)=>{
   const {email,password}=req.body;

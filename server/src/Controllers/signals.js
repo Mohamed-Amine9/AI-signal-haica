@@ -1,31 +1,22 @@
 const connection=require("../service/dbService");
-const centralController = require('./centralController');
+const central = require('./centralController');
 
-const table="signals";
+const table={
+name:"signals",
+id:"signal_id"
+};
 
 exports.getSignals=(req,res)=>{
-  centralController.getAll(req,res,table);
-   };  
-   
+  central.getAll(req,res,table.name);
+};  
+
+exports.getSignal=(req,res)=>{
+    return central.getById(req,res,table.name,table.id);
+};
 
 
-   
-   exports.getSignal=(req,res)=>{
-    const { id } = req.params;
-    const query = "SELECT * FROM signals where signals_id=?";
-    connection.query(query,[id], (err, rows) => {
-      if (err) { 
-        console.error(err.message);
-        return res.status(500).send("Error occurred while fetching data.");
-      }
-      res.status(400).json(rows);
-    })
-  
-   };  
-
-   exports.addSignal=(req,res)=>{
+exports.addSignal=(req,res)=>{
     const { date,description } = req.body;
- 
     const sql = "INSERT INTO signals (date,description) VALUES(?,?)";
     connection.query(sql, [date,description], (err, result) => {
       if (err) {
@@ -36,16 +27,5 @@ exports.getSignals=(req,res)=>{
     });
 };
 exports.deleteSignal=(req,res)=>{
-    const { id } = req.params;
-    const sql = "DELETE FROM signals WHERE signals_id = ?";
-    connection.query(sql, [id],(err, result) => {
-        if (err) {
-        console.error(err.message);
-        return res.status(500).send("Error occurred while deleting data.");
-        }
-        if (result.affectedRows === 0) {
-        return res.status(404).send("Signal not found.");
-        }
-        res.send("Data deleted successfully.");
-        });
+   central.deleteById(req,res,table.name,table.id);
 };

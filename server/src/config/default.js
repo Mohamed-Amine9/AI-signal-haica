@@ -6,8 +6,11 @@ const config = {
       password: 'onepiece',
       database: 'test'
     },
-    jwtSecret: 'mySecretKey',
-    jwtRefreshKey:'jwtRefreshKey'
+    jwtSecret: "mySecretKey",
+    jwtExpiration: "1h",
+    jwtRefresh: "myRefreshKey",
+    jwtRefreshExpiration: "30d",
+    bcryptSaltRounds: 10,
   };
 
-  module.exports=config
+  module.exports=config;

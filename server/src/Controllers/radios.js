@@ -16,11 +16,11 @@ exports.getRadios=(req,res)=>{
    
 //get By Name method
 exports.getRadio=(req,res)=>{
-  if(isNaN(req.params.input)===false){
-    return central.getById(req,res,table.name,table.id);
-  }
+  if(isNaN(req.params.input)){
     return central.getByName(req,res,table.name);
-   };  
+  }
+    return central.getById(req,res,table.name,table.id);
+};  
 
 
 exports.addRadio=(req,res)=>{
@@ -38,11 +38,10 @@ exports.addRadio=(req,res)=>{
 
 exports.deleteRadio=(req,res)=>{
   
-  if(isNaN(req.params.input)===false){
-    console.log(table.id)
-  return central.deleteById(req,res,table.name,table.id);
+  if(isNaN(req.params.input)){
+    return central.deleteByName(req,res,table.name);
   }
-  return central.deleteByName(req,res,table.name);
+ return central.deleteById(req,res,table.name,table.id);
   
 };
 
