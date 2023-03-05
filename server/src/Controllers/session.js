@@ -1,4 +1,5 @@
-const connection=require("../service/dbService");
+const path = require('path');
+const connection = require(path.join(__dirname, '..', 'service', 'dbService'));
 
 function createSession(userId, refreshToken) {
     return new Promise((resolve, reject) => {
@@ -20,7 +21,7 @@ function createSession(userId, refreshToken) {
   function deleteSessionById(id) {
     return new Promise((resolve, reject) => {
       const query = "DELETE FROM session WHERE user_id = ?";
-      db.query(query, [id], (err, result) => {
+      connection.query(query, [id], (err, result) => {
         if (err) {
           reject(err);
           return;
@@ -34,7 +35,7 @@ function createSession(userId, refreshToken) {
   function getSessionByRefreshToken(refreshToken) {
     return new Promise((resolve, reject) => {
       const query = "SELECT * FROM session WHERE refresh_token = ?";
-      db.query(query, [refreshToken], (err, results) => {
+      connection.query(query, [refreshToken], (err, results) => {
         if (err) {
           reject(err);
           return;

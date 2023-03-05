@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const posts =require('../Controllers/posts');
+const path = require('path');
+const posts = require(path.join(__dirname, '..', 'Controllers', 'posts'));
+
 
 router.get("/posts",posts.getPosts);
 router.get("/posts/:input",posts.getPost);

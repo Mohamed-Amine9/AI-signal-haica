@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const radios =require('../Controllers/radios');
+const path = require('path');
+const radios = require(path.join(__dirname, '..', 'Controllers', 'radios'));
+
 
 router.get("/radios",radios.getRadios);
 router.get("/radios/:input",radios.getRadio);

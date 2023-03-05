@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const admin =require('../Controllers/admin');
+const path = require('path');
+const admin = require(path.join(__dirname, '..', 'Controllers', 'admin'));
 
 
 router.get("/admin",admin.getAdmins);

@@ -1,7 +1,8 @@
-const connection=require("../service/dbService");
-const jwt=require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const central = require('./centralController');
+const path = require('path');
+const connection = require(path.join(__dirname, '..', 'service', 'dbService'));
+const central = require(path.join(__dirname, 'centralController'));
+const log = require(path.join(__dirname, '..', 'log', 'logger'));
+
 const table={
   name:"admin",
   id:"admin_id"
@@ -29,6 +30,7 @@ exports.addAdmin=(req, res) => {
          console.error(err.message);
          return res.status(500).send("Error occurred while inserting data.");
        }
+       log.info(`[${req.method} ${req.url}]`);
        res.send("Data inserted successfully.");
      });
 };
@@ -54,6 +56,7 @@ exports.updateAdmin=(req, res) => {
       if (result.affectedRows === 0) {
         return res.status(404).send("Admin not found.");
       }
+      log.info(`[${req.method} ${req.url}]`);
       res.send("Data updated successfully.");
     });
   };

@@ -1,17 +1,18 @@
 const express = require("express");
+const path = require('path');
 const helmet = require("helmet");
-const db=require("./src/config/default")
 const dotenv = require('dotenv');
 const app = express();
 const cors=require("cors");
 const bodyParser = require('body-parser');
-const usersRoutes = require('./src/Routes/userRoutes');
-const postsRoutes = require('./src/Routes/postsRoutes');
-const radiosRoutes = require('./src/Routes/radiosRoutes');
-const chanelsRoutes = require('./src/Routes/chanelsRoutes');
-const signalsRoutes = require('./src/Routes/signalsRoutes');
-const adminRoutes = require('./src/Routes/adminRoutes');
-const super_adminRoutes = require('./src/Routes/super_adminRoutes');
+const db = require(path.join(__dirname, 'src', 'config', 'default'));
+const usersRoutes = require(path.join(__dirname, 'src', 'Routes', 'userRoutes'));
+const postsRoutes = require(path.join(__dirname, 'src', 'Routes', 'postsRoutes'));
+const radiosRoutes = require(path.join(__dirname, 'src', 'Routes', 'radiosRoutes'));
+const chanelsRoutes = require(path.join(__dirname, 'src', 'Routes', 'chanelsRoutes'));
+const signalsRoutes = require(path.join(__dirname, 'src', 'Routes', 'signalsRoutes'));
+const adminRoutes = require(path.join(__dirname, 'src', 'Routes', 'adminRoutes'));
+const super_adminRoutes = require(path.join(__dirname, 'src', 'Routes', 'super_adminRoutes'));
 //const jwt=require('jsonwebtoken');
 
 dotenv.config();

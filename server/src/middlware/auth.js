@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
-const config= require("../config/default");
+const path = require('path');
+const config = require(path.join(__dirname, '..', 'config', 'default'));
 
 function generateToken(user) {
     const payload = {

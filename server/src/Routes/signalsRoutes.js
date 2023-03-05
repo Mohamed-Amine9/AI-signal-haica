@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const signals =require('../Controllers/signals');
+const path = require('path');
+const signals = require(path.join(__dirname, '..', 'Controllers', 'signals'));
+
 
 router.get("/signals",signals.getSignals);
 router.get("/signals/:input",signals.getSignal);

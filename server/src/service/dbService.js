@@ -1,5 +1,7 @@
 const mysql = require('mysql2');
-const config = require('../config/default');
+const path = require('path');
+const config = require(path.join(__dirname, '..', 'config', 'default'));
+
 
 const connection = mysql.createConnection({
     

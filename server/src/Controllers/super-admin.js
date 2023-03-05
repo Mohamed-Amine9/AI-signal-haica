@@ -1,6 +1,8 @@
-const connection=require("../service/dbService");
-const centralController = require('./centralController');
-const table="super_admin";
+const path = require('path');
+const connection = require(path.join(__dirname, '..', 'service', 'dbService'));
+const log = require(path.join(__dirname, '..', 'log', 'logger'));
+
+
 
 exports.addSuperAdmin=(req,res)=>{
     const { firstName,lastName,role,email,password  } = req.body;
@@ -11,6 +13,7 @@ exports.addSuperAdmin=(req,res)=>{
         console.error(err.message);
         return res.status(500).send("Error occurred while inserting data.");
       }
+      log.info(`[${req.method} ${req.url}]`);
       res.send("Data inserted successfully.");
     });
 };

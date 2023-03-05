@@ -1,0 +1,7 @@
+{"level":"info","message":"[GET /radios]","timestamp":"2023-03-03T05:46:21.278Z"}
+{"level":"info","message":"[GET /posts]","timestamp":"2023-03-03T05:46:36.545Z"}
+{"level":"info","message":"[POST /login]","timestamp":"2023-03-03T05:47:12.697Z"}
+{"level":"info","message":"[DELETE /logout]","timestamp":"2023-03-03T05:48:10.926Z"}
+{"level":"info","message":"[DELETE /logout]","timestamp":"2023-03-03T05:49:01.577Z"}
+{"level":"info","message":"[GET /radios]","timestamp":"2023-03-03T06:37:12.013Z"}
+{"level":"info","message":"[POST /register]","timestamp":"2023-03-03T07:03:03.656Z"}

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const chanels =require('../Controllers/chanels');
+const path = require('path');
+const chanels = require(path.join(__dirname, '..', 'Controllers', 'chanels'));
 
 
 router.get("/chanels",chanels.getChanels);
