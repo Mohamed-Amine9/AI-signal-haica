@@ -1,15 +1,5 @@
 /*!
 
-=========================================================
-* Paper Dashboard React - v1.3.1
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/paper-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-* Licensed under MIT (https://github.com/creativetimofficial/paper-dashboard-react/blob/main/LICENSE.md)
-
-* Coded by Creative Tim
 
 =========================================================
 
@@ -27,12 +17,12 @@ import logo from "logo.svg";
 var ps;
 
 function Sidebar(props) {
-  const sidebar = React.useRef();
+  const sidebar = React.useRef();//yani lvariable sidbar atineha refernce najem naffectilha ay haja nheb aleha fel html mele5er l useRef 3ibara amalt input w button w habit l contenu taa k input thotou fel button
   // verifies if routeName is the one active (in browser input)
   const activeRoute = (routeName) => {
     return props.location.pathname.indexOf(routeName) > -1 ? "active" : "";
   };
-  React.useEffect(() => {
+  React.useEffect(() => {//l useEffect yaaml hajtin awel ma tlansi l projet ye5demlek w awel ma taamel reload lel page wala taaml update l ay haja yawed ye5dem men jdid
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(sidebar.current, {
         suppressScrollX: true,

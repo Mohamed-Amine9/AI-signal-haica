@@ -16,72 +16,78 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import Dashboard from "views/Dashboard.js";
-import Notifications from "views/Notifications.js";
-import Icons from "views/Icons.js";
-import Typography from "views/Typography.js";
-import TableList from "views/Tables.js";
-import Maps from "views/Map.js";
-import UserPage from "views/User.js";
-import UpgradeToPro from "views/Upgrade.js";
 
+import Admins from "views/Admins.js"
+import Users from "views/Users.js"
+import Chanels from "views/Chanels.js"
+import Radios from "views/Radios.js"
+import News from "views/News.js"
+import Profile from "views/Profile.js"
+import AI_signals from "views/AI_signals.js"
+import Settings from "views/Settings.js"
+import States from "views/States.js"
 var routes = [
   {
-    path: "/dashboard",
-    name: "Dashboard",
-    icon: "nc-icon nc-bank",
-    component: Dashboard,
+    path: "/admins",
+    name: "Admins",
+    icon: "",
+    component: Admins,
     layout: "/admin"
   },
   {
-    path: "/icons",
-    name: "Icons",
-    icon: "nc-icon nc-diamond",
-    component: Icons,
+    path: "/users",
+    name: "Users",
+    icon: "",
+    component: Users,
     layout: "/admin"
   },
   {
-    path: "/maps",
-    name: "Maps",
-    icon: "nc-icon nc-pin-3",
-    component: Maps,
+    path: "/chanels",
+    name: "Chanels",
+    icon: "",
+    component: Chanels,
     layout: "/admin"
   },
   {
-    path: "/notifications",
-    name: "Notifications",
-    icon: "nc-icon nc-bell-55",
-    component: Notifications,
+    path: "/radios",
+    name: "Radios",
+    icon: "",
+    component: Radios,
     layout: "/admin"
   },
   {
-    path: "/user-page",
-    name: "User Profile",
-    icon: "nc-icon nc-single-02",
-    component: UserPage,
+    path: "/news",
+    name: "News",
+    icon: "",
+    component: News,
     layout: "/admin"
   },
   {
-    path: "/tables",
-    name: "Table List",
-    icon: "nc-icon nc-tile-56",
-    component: TableList,
+    path: "/profile",
+    name: "Profile",
+    icon: "",
+    component: Profile,
     layout: "/admin"
   },
   {
-    path: "/typography",
-    name: "Typography",
-    icon: "nc-icon nc-caps-small",
-    component: Typography,
+    path: "/AI_signals",
+    name: "AI signals",
+    icon: "",
+    component: AI_signals,
     layout: "/admin"
   },
   {
-    pro: true,
-    path: "/upgrade",
-    name: "Upgrade to PRO",
-    icon: "nc-icon nc-spaceship",
-    component: UpgradeToPro,
+    path: "/settings",
+    name: "Settings",
+    icon: "",
+    component: Settings,
     layout: "/admin"
-  }
-];
+  },
+  {
+    path: "/states",
+    name: "States",
+    icon: "",
+    component: States,
+    layout: "/admin"
+  }];
 export default routes;

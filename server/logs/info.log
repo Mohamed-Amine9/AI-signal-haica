@@ -5,3 +5,7 @@
 {"level":"info","message":"[DELETE /logout]","timestamp":"2023-03-03T05:49:01.577Z"}
 {"level":"info","message":"[GET /radios]","timestamp":"2023-03-03T06:37:12.013Z"}
 {"level":"info","message":"[POST /register]","timestamp":"2023-03-03T07:03:03.656Z"}
+{"level":"info","message":"[POST /super_admin]","timestamp":"2023-03-06T00:15:21.666Z"}
+{"level":"info","message":"[POST /login]","timestamp":"2023-03-06T00:15:42.826Z"}
+{"level":"info","message":"[POST /login]","timestamp":"2023-03-06T00:19:01.985Z"}
+{"level":"info","message":"[DELETE /logout]","timestamp":"2023-03-06T00:19:34.906Z"}
