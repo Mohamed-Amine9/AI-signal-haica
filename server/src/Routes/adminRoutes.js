@@ -9,5 +9,6 @@ router.get("/admin/:input",admin.getAdmin);
 router.post("/admin",admin.addAdmin);
 router.delete("/admin/:input",admin.deleteAdmin);
 router.put("/admin/:input",admin.updateAdmin);
-
+router.post("/login/admin",admin.login)
+router.delete("/logout/admin",admin.logOut)
 module.exports=router;

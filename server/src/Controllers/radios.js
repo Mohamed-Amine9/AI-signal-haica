@@ -1,16 +1,18 @@
 const path = require('path');
+
 const connection = require(path.join(__dirname, '..', 'service', 'dbService'));
 const central = require(path.join(__dirname, 'centralController'));
-const log = require(path.join(__dirname, '..', 'log', 'logger'));
+const {logs } = require(path.join(__dirname, '..', 'middlware', 'auth'));
 const message = require(path.join(__dirname, '..', 'config', 'messages'));
 const table = {
   name:"radio",
   id:"radio_id"
 }
-
+const redirect=require('../middlware/auth');
 
 //getAll method
 exports.getRadios=(req,res)=>{
+ // redirect.requireSession(req,res);
   central.getAll(req,res,table.name);
   
    };  
@@ -33,7 +35,7 @@ exports.addRadio=(req,res)=>{
         console.error(err.message);
         return res.status(500).send(message.error.serverError);
       }
-      log.info(`[${req.method} ${req.url}]`);
+      logs(req);
       res.send(message.success.create);
     });
 };
@@ -43,7 +45,7 @@ exports.deleteRadio=(req,res)=>{
   if(isNaN(req.params.input)){
     return central.deleteByName(req,res,table.name);
   }
-  log.info(`[${req.method} ${req.url}]`);
+  logs(req);
  return central.deleteById(req,res,table.name,table.id);
   
 };
@@ -61,7 +63,7 @@ exports.updateRadio=(req, res) => {
     if (result.affectedRows === 0) {
       return res.status(404).send(message.error.notFound+" "+table);
     }
-    log.info(`[${req.method} ${req.url}]`);
+    logs(req);
     res.send(message.success.update);
   });
 };

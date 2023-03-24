@@ -1,37 +1,72 @@
 const express = require("express");
 const path = require('path');
 const helmet = require("helmet");
-const dotenv = require('dotenv');
 const app = express();
 const cors=require("cors");
 const bodyParser = require('body-parser');
 const db = require(path.join(__dirname, 'src', 'config', 'default'));
-const usersRoutes = require(path.join(__dirname, 'src', 'Routes', 'userRoutes'));
-const postsRoutes = require(path.join(__dirname, 'src', 'Routes', 'postsRoutes'));
-const radiosRoutes = require(path.join(__dirname, 'src', 'Routes', 'radiosRoutes'));
-const chanelsRoutes = require(path.join(__dirname, 'src', 'Routes', 'chanelsRoutes'));
-const signalsRoutes = require(path.join(__dirname, 'src', 'Routes', 'signalsRoutes'));
-const adminRoutes = require(path.join(__dirname, 'src', 'Routes', 'adminRoutes'));
-const super_adminRoutes = require(path.join(__dirname, 'src', 'Routes', 'super_adminRoutes'));
+
+
 //const jwt=require('jsonwebtoken');
 
-dotenv.config();
+let dotenv = require('dotenv');
+dotenv.config({path:path.join(__dirname, 'src', 'config', '.env')})
+
+
 app.use(cors());
 app.use(express.json());
 app.use(helmet());
-app.listen(db.port, () => {
-   console.log("Server running on port ",db.port);
-  });
+
 
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
-  app.use('/', usersRoutes);
-  app.use('/', postsRoutes);
-  app.use('/', radiosRoutes);
-  app.use('/', chanelsRoutes);
-  app.use('/', signalsRoutes);
-  app.use('/', adminRoutes);
-  app.use('/', super_adminRoutes);
+
+
+  const usersRoutes = require(path.join(
+    __dirname,
+    "src",
+    "Routes",
+    "userRoutes"
+  ));
+  const postsRoutes = require(path.join(
+    __dirname,
+    "src",
+    "Routes",
+    "postsRoutes"
+  ));
+  const radiosRoutes = require(path.join(
+    __dirname,
+    "src",
+    "Routes",
+    "radiosRoutes"
+  ));
+  const chanelsRoutes = require(path.join(
+    __dirname,
+    "src",
+    "Routes",
+    "chanelsRoutes"
+  ));
+  const signalsRoutes = require(path.join(
+    __dirname,
+    "src",
+    "Routes",
+    "signalsRoutes"
+  ));
+  const adminRoutes = require(path.join(__dirname, "src","Routes","adminRoutes"));
+  const super_adminRoutes = require(path.join(
+    __dirname,
+    "src",
+    "Routes",
+    "super_adminRoutes"
+  ));
+
+  app.use("/", usersRoutes);
+  app.use("/", postsRoutes);
+  app.use("/", radiosRoutes);
+  app.use("/", chanelsRoutes);
+  app.use("/", signalsRoutes);
+  app.use("/", adminRoutes);
+  app.use("/", super_adminRoutes);
 
 
   //Routest
@@ -102,4 +137,6 @@ app.delete('/users/:id',verify,(req,res)=>{
   });
 
 
-  module.exports=app;
+  app.listen(process.env.PORT, () => {
+    console.log("Server running on port ",process.env.PORT);
+   });

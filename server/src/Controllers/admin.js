@@ -1,11 +1,12 @@
 const path = require('path');
 const connection = require(path.join(__dirname, '..', 'service', 'dbService'));
 const central = require(path.join(__dirname, 'centralController'));
-const log = require(path.join(__dirname, '..', 'log', 'logger'));
+const {logs } = require(path.join(__dirname, '..', 'middlware', 'auth'));
+
 
 const table={
   name:"admin",
-  id:"admin_id"
+  sessionId:"admin_id"
 };
 
 
@@ -30,7 +31,7 @@ exports.addAdmin=(req, res) => {
          console.error(err.message);
          return res.status(500).send("Error occurred while inserting data.");
        }
-       log.info(`[${req.method} ${req.url}]`);
+       logs(req);
        res.send("Data inserted successfully.");
      });
 };
@@ -56,7 +57,26 @@ exports.updateAdmin=(req, res) => {
       if (result.affectedRows === 0) {
         return res.status(404).send("Admin not found.");
       }
-      log.info(`[${req.method} ${req.url}]`);
+      logs(req);
       res.send("Data updated successfully.");
     });
   };
+
+  exports.login= async(req,res)=>{
+    try {
+      
+      logs(req);
+      const t = await central.loginUser(req,res,table.name,table.sessionId);
+      res.json(t)
+
+    } catch (error) {
+      res.json(error)
+  
+    }
+  };
+  
+  exports.logOut=(req,res)=>{
+    central.logOut(req,res,table.name,table.sessionId);
+    logs(req);
+  };
+  

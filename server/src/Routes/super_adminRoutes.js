@@ -5,6 +5,7 @@ const super_admin = require(path.join(__dirname, '..', 'Controllers', 'super-adm
 
 
 router.post("/super_admin",super_admin.addSuperAdmin);
-router.post('/login',super_admin.login);
-router.delete('/logout',super_admin.logOut);
+router.post('/login/super_admin',super_admin.login);
+router.delete('/logout/super_admin',super_admin.logOut);
+
 module.exports=router;

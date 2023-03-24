@@ -4,7 +4,6 @@ const path = require('path');
 const userController = require(path.join(__dirname, '..', 'Controllers', 'userController'));
 
 
-router.post('/register',userController.register);
 router.post('/login',userController.login);
 router.delete('/logout',userController.logOut);
 

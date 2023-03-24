@@ -1,22 +1,28 @@
 const path = require('path');
 const central = require(path.join(__dirname, 'centralController'));
-const log = require(path.join(__dirname, '..', 'log', 'logger'));
+const {logs } = require(path.join(__dirname, '..', 'middlware', 'auth'));
 
 const table={
 name:"user"
 };
 
-exports.register=(req,res)=>{
-  central.signUp(req, res, table.name);
-};
 
-exports.login=(req,res)=>{
-    central.loginUser(req,res,table.name);
-    log.info(`[${req.method} ${req.url}]`);
+exports.login=  async(req,res)=>{
+  try {
+    logs(req);
+    const t = await central.loginUser(req,res,table.name);
+    console.log(t);
+    res.json(t)
+
+  } catch (error) {
+    console.log('im here')
+    res.json(error)
+
+  }
 };
 
 exports.logOut=(req,res)=>{
   central.logOut(req,res,table.name);
-  log.info(`[${req.method} ${req.url}]`);
+  logs(req);
 };
 

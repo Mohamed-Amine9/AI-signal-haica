@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS user (
 )`;
 const admin=`
 CREATE TABLE IF NOT EXISTS admin (
-  admin_id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT AUTO_INCREMENT PRIMARY KEY,
   firstName VARCHAR(255) ,
   lastName VARCHAR(255) ,
   email VARCHAR(255) ,
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS admin (
 )`;
 const super_admin=`
 CREATE TABLE IF NOT EXISTS super_admin (
-  superAdmin_id INT AUTO_INCREMENT PRIMARY KEY,
+  id INT AUTO_INCREMENT PRIMARY KEY,
   firstName VARCHAR(255) ,
   lastName VARCHAR(255) ,
   email VARCHAR(255) ,
@@ -89,14 +89,17 @@ CREATE TABLE IF NOT EXISTS chanel (
     imageUrl VARCHAR(255),
     videoUrl VARCHAR(255) )
     `;
-   const session=` CREATE TABLE IF NOT EXISTS session (
-      session_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-      user_id INT NOT NULL,
-      refresh_token VARCHAR(255) NOT NULL,
-      created_at DATETIME NOT NULL,
-      updated_at DATETIME NOT NULL,
-      FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
-    )`;
+   const session=`
+   CREATE TABLE IF NOT EXISTS session (
+    session_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    admin_id INT,
+    super_admin_id INT,
+    refresh_token VARCHAR(255) NOT NULL,
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL,
+    FOREIGN KEY (admin_id) REFERENCES admin(id) ON DELETE CASCADE,
+    FOREIGN KEY (super_admin_id) REFERENCES super_admin(id) ON DELETE CASCADE
+  );`;
   connection.query(user, (err, result) => {
     if (err) throw err;
     console.log('Table users created');

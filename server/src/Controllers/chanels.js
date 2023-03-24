@@ -1,8 +1,7 @@
 const path = require('path');
 const connection = require(path.join(__dirname, '..', 'service', 'dbService'));
 const central = require(path.join(__dirname, 'centralController'));
-const log = require(path.join(__dirname, '..', 'log', 'logger'));
-const message = require(path.join(__dirname, '..', 'config', 'messages'));
+const {logs } = require(path.join(__dirname, '..', 'middlware', 'auth'));
 const table={
   name:"chanel",
   id:"chanel_id"
@@ -34,7 +33,7 @@ exports.addChanel=(req,res)=>{
         console.error(err.message);
         return res.status(500).send("Error occurred while inserting data.");
       }
-      log.info(`[${req.method} ${req.url}]`);
+      logs(req);
       res.send("Data inserted successfully.");
     });
 };
@@ -59,7 +58,7 @@ exports.updateChanel=(req, res) => {
     if (result.affectedRows === 0) {
       return res.status(404).send("Chanel not found.");
     }
-    log.info(`[${req.method} ${req.url}]`);
+    logs(req);
     res.send("Data updated successfully.");
   });
 };

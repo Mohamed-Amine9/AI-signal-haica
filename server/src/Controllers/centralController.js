@@ -1,12 +1,9 @@
 const path = require('path');
 const connection = require(path.join(__dirname, '..', 'service', 'dbService'));
 const message = require(path.join(__dirname, '..', 'config', 'messages'));
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const config = require(path.join(__dirname, '..', 'config', 'default'));
-const log = require(path.join(__dirname, '..', 'log', 'logger'));
 const { createSession, deleteSessionById, getSessionByRefreshToken } = require(path.join(__dirname, 'session'));
-const { generateToken, generateRefreshToken } = require(path.join(__dirname, '..', 'middlware', 'auth'));
+const { generateToken, generateRefreshToken,logs } = require(path.join(__dirname, '..', 'middlware', 'auth'));
 
 
 
@@ -18,15 +15,13 @@ exports.getAll = (req, res, table) => {
     connection.query(query, (err, rows) => {
       if (err) { 
         console.error(err.message);
-        log.logger.log('error','Error finding customers')
         return res.status(500).send(message.error.serverError);
       }
       if (!rows) {
         console.error(message.error.notFound+" "+ table);
-       // log.logger.log(req.method,req.url,'info', 'Successfully got list of customers')
         return res.status(404).send(message.error.notFound);
       }
-      log.info(`[${req.method} ${req.url}]`);
+      logs(req);
       res.status(200).json(rows);
     })
   };
@@ -43,7 +38,7 @@ exports.getAll = (req, res, table) => {
         console.error(err.message);
         return res.status(500).send(message.error.serverError);
       }
-      log.info(`[${req.method} ${req.url}]`);
+      logs(req);
       res.status(400).json(rows);
     })
 };
@@ -60,25 +55,11 @@ exports.getByEmail=(req,res,table,capt)=>{
         console.error(err.message);
         return res.status(500).send(message.error.serverError);
       }
-      log.info(`[${req.method} ${req.url}]`);
+      logs(req);
       res.status(400).json(rows);
     })
 };
-/* -------------------------------------------------------------------------- */
-/*        signUp method (that method used to check if the user exists)        */
-/* -------------------------------------------------------------------------- */
-exports.signUp = (req, res, table) =>{
-  const { firstName,lastName,email,password } = req.body;
-  
-  const query = "SELECT * FROM "+table+" where email=?";
-  connection.query(query,[email], (err, rows) => {
-    if (rows.length > 0) { 
-      return res.status(200).json(rows[0]);
-    }
-    log.info(`[${req.method} ${req.url}]`);
-      return register(req, res, table);
-  });
-};
+
 /* -------------------------------------------------------------------------- */
 /*                             get by name method                             */
 /* -------------------------------------------------------------------------- */
@@ -90,7 +71,7 @@ exports.getByName=(req,res,table,capt)=>{
         console.error(err.message);
         return res.status(500).send(message.error.serverError);
       }
-      log.info(`[${req.method} ${req.url}]`);
+      logs(req);
       res.status(400).json(rows);
     })
 };
@@ -109,7 +90,7 @@ exports.deleteByName=(req,res,table)=>{
         if (result.affectedRows === 0) {
         return res.status(404).send(message.error.notFound+" "+table);
         }
-        log.info(`[${req.method} ${req.url}]`);
+        logs(req);
         res.send(message.success.delete);
         });
 };
@@ -129,7 +110,7 @@ exports.deleteById=(req,res,table,Id)=>{
         if (result.affectedRows === 0) {
         return res.status(404).send(message.error.notFound+" "+table);
         }
-        log.info(`[${req.method} ${req.url}]`);
+        logs(req);
         res.send(message.success.delete);
         });
 };
@@ -150,68 +131,34 @@ exports.deleteByEmail=(req,res,table)=>{
         if (result.affectedRows === 0) {
         return res.status(404).send(message.error.notFound+" "+table);
         }
-        log.info(`[${req.method} ${req.url}]`);
+        logs(req);
         res.send(message.success.delete);
         });
 };
 
-
-/* -------------------------------------------------------------------------- */
-/*                          register method                                   */
-/* -------------------------------------------------------------------------- */
-
-
-function register (req, res,table) {
-    const { firstName,lastName,email,password } = req.body;
-    
-    return new Promise((resolve, reject) => {
-        bcrypt.hash(password, config.bcryptSaltRounds, (err, hash) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-    
-          const query = "INSERT INTO "+table+" (firstName,lastName,email, password) VALUES (?,?,?,?)";
-          connection.query(query, [firstName,lastName,email, hash], (err, result) => {
-            if (err) {
-              reject(err);
-              return;
-            }
-            const userId = result.insertId;
-            const refreshToken = generateRefreshToken({ id: userId, email });
-    
-            createSession(userId, refreshToken)
-              .then((sessionId) => {
-                const token = generateToken({ id: userId, email });
-                resolve({ id: userId, email, token, refreshToken, sessionId });
-              })
-              .catch((err) => {
-                reject(err);
-              });
-          });
-        });
-      });
-    }
 
 
 /* -------------------------------------------------------------------------- */
 /*                          get user by email method                          */
 /* -------------------------------------------------------------------------- */
 function getUserByEmail(email,table) {
+  console.log(email,table)
       return new Promise((resolve, reject) => {
         const query ="SELECT * FROM "+table+" WHERE email = ?";
+        console.log(query)
         connection.query(query, [email], (err, results) => {
           if (err) {
             reject(err);
             return;
           }
-    
+          console.log(results)
           if (results.length === 0) {
-
-            resolve(null);
+            resolve(results)
             return;
           }
+          
           const user = results[0];
+          
           resolve(user);
         });
       });
@@ -222,9 +169,8 @@ function getUserByEmail(email,table) {
 /* -------------------------------------------------------------------------- */
 
 
-exports.loginUser=(req,res,table) =>{
+exports.loginUser=(req,res,table,session) =>{
   const { email,password } = req.body;
-
       return new Promise((resolve, reject) => {
         getUserByEmail(email,table)
           .then((user) => {
@@ -232,14 +178,13 @@ exports.loginUser=(req,res,table) =>{
               resolve(null);
               return;
             }
-            
             bcrypt.compare(password, user.password, (err, result) => {
               if (err) {
                 reject(err);
                 return;
               }
-    
-              if (!result) {
+              
+              if (result) {//lenna fama echkel
                 resolve(null);
                 return;
               }
@@ -247,7 +192,7 @@ exports.loginUser=(req,res,table) =>{
               const token = generateToken({ id: user.id, email });
               const refreshToken = generateRefreshToken({ id: user.id, email });
 
-              createSession(user.id, refreshToken)
+              createSession(user.id, refreshToken,session)
                 .then((sessionId) => {
                   resolve({
                     id: user.id,
@@ -271,15 +216,18 @@ exports.loginUser=(req,res,table) =>{
  /* -------------------------------------------------------------------------- */
  /*                               logOut method                                */
  /* -------------------------------------------------------------------------- */
-exports.logOut=(req,res,table)=>{
+exports.logOut=(req,res,table,session)=>{
   const {email}=req.body;
+  console.log("first")
   getUserByEmail(email,table)
   .then((user) => {
     if (!user) {
       resolve(null);
       return;
     }
-    deleteSessionById(user.id)
+
+    console.log('hola');
+    deleteSessionById(user.id,session)
     .then(() => {
       res.status(200).send({ message: 'Logout successful' });
     })
