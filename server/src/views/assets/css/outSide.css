@@ -1,0 +1,10 @@
+.embed-responsive {
+    height: 100px; /* change to desired height */
+	width: 80%;
+	
+}
+
+.embed-responsive iframe {
+    height: 70%;
+	width: 100%;
+}
