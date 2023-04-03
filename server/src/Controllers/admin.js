@@ -20,6 +20,7 @@ exports.getAdmin=(req,res)=>{
     if(isNaN(req.params.input)){
       return central.getByEmail(req,res,table.name);
     }
+
       return central.getById(req,res,table.name,table.id);
 };  
 

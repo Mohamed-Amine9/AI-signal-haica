@@ -40,7 +40,7 @@ exports.getAll = (req, res, table) => {
       }
       logs(req);
       res.status(400).json(rows);
-    })
+    }) 
 };
 
 

@@ -69,39 +69,6 @@ app.use(helmet());
   app.use("/", super_adminRoutes);
 
 
-  //Routest
-//post 
-// app.post("/users", (req, res) => {
-//     const { firstName,lastName,email,password } = req.body;
- 
-//     const sql = "INSERT INTO users (firstName,lastName,email,password) VALUES (?,?,?,?)";
-//     connection.query(sql, [firstName,lastName,email,password], (err, result) => {
-//       if (err) {
-//         console.error(err.message);
-//         return res.status(500).send("Error occurred while inserting data.");
-//       }
-//       res.send("Data inserted successfully.");
-//     });
-//   });
-
-
-
-//delete
-/*app.delete("/users/:id", (req, res) => {
-    const { id } = req.params;
-    const sql = "DELETE FROM users WHERE id = ?";
-    connection.query(sql, [id],(err, result) => {
-        if (err) {
-        console.error(err.message);
-        return res.status(500).send("Error occurred while deleting data.");
-        }
-        if (result.affectedRows === 0) {
-        return res.status(404).send("User not found.");
-        }else{
-        res.send("Data deleted successfully.");
-        }
-        });
-        });*/
         const verify =(req,res,next)=>{
           const authHerader=req.headers.authorization;
           if (authHerader){
