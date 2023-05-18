@@ -11,11 +11,15 @@ const table = {
 const redirect=require('../middlware/auth');
 
 //getAll method
-exports.getRadios=(req,res)=>{
- // redirect.requireSession(req,res);
-  central.getAll(req,res,table.name);
-  
-   };  
+exports.getRadios=async(req,res)=>{
+  try {
+    let radios = await central.getAll(req, res, table.name);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'An error occurred while fetching the radios' });
+  }
+};  
    
 //get By Name method
 exports.getRadio=(req,res)=>{

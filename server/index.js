@@ -7,15 +7,44 @@ const bodyParser = require('body-parser');
 const db = require(path.join(__dirname, 'src', 'config', 'default'));
 
 
-//const jwt=require('jsonwebtoken');
-
 let dotenv = require('dotenv');
 dotenv.config({path:path.join(__dirname, 'src', 'config', '.env')})
 
 
 app.use(cors());
 app.use(express.json());
-app.use(helmet());
+
+
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: [
+        "'self'",
+        "'unsafe-inline'",
+        'https://kit.fontawesome.com',
+        'https://buttons.github.io',
+      ],
+      styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+      imgSrc: ["'self'", "data:"],
+      connectSrc: ["'self'"],
+      fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+      mediaSrc: ["'self'", "https://radio.shemsfm.net",
+      "https://live.ifm.tn/radio/8000/ifmlive?1585267848",
+    "https://stream.radiozitouna.tn/radio/8030/radio.mp3",
+  "https://radio.mosaiquefm.net/mosalive",
+"https://streaming2.toutech.net/jawharafm",
+"http://rtstream.tanitweb.com/nationale",
+"https://expressfm.ice.infomaniak.ch/expressfm-64.mp3",
+"http://streaming.knoozfm.net:8000/knoozfm",
+"http://rtstream.tanitweb.com/sfax",
+"https://stream6.tanitweb.com/sabrafm",
+"https://www.dailymotion.com/embed/video/x7va0xb?autoPlay=1"],
+    },
+  })
+);
+
 
 
   app.use(bodyParser.urlencoded({ extended: true }));
@@ -60,6 +89,12 @@ app.use(helmet());
     "super_adminRoutes"
   ));
 
+
+  app.set('view engine', 'ejs');
+  app.set('views', path.join(__dirname,'src' ,'views'));
+  app.use(express.static(path.join(__dirname, 'src', 'assets')));
+
+
   app.use("/", usersRoutes);
   app.use("/", postsRoutes);
   app.use("/", radiosRoutes);
@@ -69,39 +104,7 @@ app.use(helmet());
   app.use("/", super_adminRoutes);
 
 
-        const verify =(req,res,next)=>{
-          const authHerader=req.headers.authorization;
-          if (authHerader){
-          const token =authHerader.split(" ")[1];
-          jwt.verify(token,"mySecretKey",(err,user)=>{
-            if (err){
-              return res.status(403).json("token is not valid!");
-            }
-           req.user=user;
-           next();  
-            });
-            }else{
-            res.status(401),json("you are no authenticated!");
-            }
-          };
-app.delete('/users/:id',verify,(req,res)=>{
-   if(req.user.id===req.params.id || req.user.isAdmin){
-  res.status(200).json("user has been deleted");
-  }else{
-  res.status(403).json("you are not allowed to delete this user")
-  }
-});
-  
-
-
-  app.post("/register", (req, res) => {
-    let data = {firstName: req.body.fistName,lastName:req.body.lastName, email: req.body.email, password: req.body.password};
-    let sql = "INSERT INTO users SET ?";
-    let query = conn.query(sql, data, (err, results) => {
-      if (err) throw err;
-      res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-    });
-  });
+     
 
 
   app.listen(process.env.PORT, () => {

@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS chanel (
   url VARCHAR(255) NOT NULL)`;
 
   const signals=`
-  CREATE TABLE IF NOT EXISTS signals (
+  CREATE TABLE IF NOT EXISTS Signals(
   signal_id INT AUTO_INCREMENT PRIMARY KEY,
   date DATE ,
   description VARCHAR(255) )`;

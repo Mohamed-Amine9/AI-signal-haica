@@ -15,7 +15,7 @@ exports.login=  async(req,res)=>{
     res.json(t)
 
   } catch (error) {
-    console.log('im here')
+    
     res.json(error)
 
   }
