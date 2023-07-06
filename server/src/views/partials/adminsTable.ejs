@@ -1,4 +1,14 @@
 <!-- admins.ejs -->
+<!-- ... your code ... -->
+
+<div style="text-align: right; margin-bottom: 10px;">
+    <a href="/addAdmin">
+      <button type="button" class="btn btn-primary" style="margin-right: 15px;">Add Admin</button>
+    </a>
+  </div>
+  
+  <!-- ... the table HTML ... -->
+   
 <table class="table align-items-center mb-0">
   <thead>
       <tr>
@@ -14,9 +24,7 @@
       <tr>
           <td>
               <div class="d-flex px-2 py-1">
-                  <div>
-                      <img src="/img/team-2.jpg" class="avatar avatar-sm me-3" alt="user1">
-                  </div>
+            
                   <div class="d-flex flex-column justify-content-center">
                       <h6 class="mb-0 text-sm"><%= row.firstName %> <%= row.lastName %></h6>
                       <h6 class="text-xs text-secondary mb-0 admin-email"><%= row.email %></h6>
@@ -31,17 +39,27 @@
               <span class="badge badge-sm bg-gradient-success">Online</span>
           </td>
           <td class="align-middle text-center">
-              <a href="/edit">
-                  <button type="button" class="btn btn-primary btn-sm ms-auto" onclick="getEmail()">Edit</button>
-              </a>
+            
+                <button type="button" class="btn btn-primary btn-sm ms-auto edit-button" onclick="console.log('Button clicked')">Edit</button>
+
           </td>
       </tr>
       <% }); %>
   </tbody>
 </table>
 <script>
- function getEmail() {
-  var email = document.querySelector('.admin-email').innerHTML;
-  console.log(email);
-}
-</script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.body.addEventListener('click', (event) => {
+    if (event.target.classList.contains('edit-button')) {
+      // This is an edit button
+      const adminRow = event.target.closest('tr'); // Get the table row
+      const adminEmail = adminRow.querySelector('.admin-email').textContent; // Get the email from the row
+      console.log(`Redirecting to: /edit/${encodeURIComponent(adminEmail)}`); // Log the target URL
+      window.location.href = '/edit/' + encodeURIComponent(adminEmail); // Go to the edit page for the admin
+    }
+  });
+});
+
+  </script>
+  
+  

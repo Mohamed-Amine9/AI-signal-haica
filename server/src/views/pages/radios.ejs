@@ -4,6 +4,8 @@
 
 <head>
   <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://kit.fontawesome.com https://buttons.github.io https://cdnjs.cloudflare.com https://ajax.googleapis.com">
+
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon.png">
   <link rel="icon" type="image/png" href="/img/favicon.png">
@@ -16,7 +18,7 @@
   <link href="/css/nucleo-icons.css" rel="stylesheet" />
   <link href="/css/nucleo-svg.css" rel="stylesheet" />
   <!-- Font Awesome Icons -->
-  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  
   <link href="/css/nucleo-svg.css" rel="stylesheet" />
   <!-- CSS Files -->
   <link id="pagestyle" href="/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
@@ -26,7 +28,12 @@
 
 <body class="g-sidenav-show   bg-gray-100">
   <div class="min-height-300 bg-primary position-absolute w-100"></div>
-  <%- include('../partials/sideBar.ejs') %>
+  <% if (userType === 'admin'  || userType==='radio' || userType==='chanel') { %>
+    <%- include('../partials/sideBarAdmin.ejs') %>  
+  <% } else if (userType === 'super_admin'|| userType==='signals' || userType==='admins') { %>
+    <%- include('../partials/sideBarSuperAmin.ejs') %>  
+  <% } %>
+ 
   <main class="main-content position-relative border-radius-lg ">
     <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
@@ -43,12 +50,7 @@
             </div>
           </div>
           <ul class="navbar-nav  justify-content-end">
-            <li class="nav-item d-flex align-items-center">
-              <a href="javascript:;" class="nav-link text-white font-weight-bold px-0">
-                <i class="fa fa-user me-sm-1"></i>
-                <span class="d-sm-inline d-none" >Sign In</span>
-              </a>
-            </li>
+
           </ul>
         </div>
       </div>
@@ -56,36 +58,115 @@
     <!-- End Navbar -->
         
     <div class="container-fluid py-9">
-        <div class="row justify-content-center">
-          <div class="col-lg-10 col-md-10 col-sm-12">
-            <div class="card shadow d-flex flex-column">
-                <div class="container-fluid py-5 justify-content-center text-center">
-                    <div class="embed-responsive embed-responsive-16by9 mx-auto bg-light" style="height: 100px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.5); position: relative;">
-                      <div class="overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); border-radius: 10px;">
-                        <div class="d-flex align-items-center justify-content-center h-100">
-                          <audio controls class="embed-responsive-item text-white" style="background-color: transparent; border:none; outline:none;">
-                            <source src="audio/track1.mp3" type="audio/mpeg">
-                            Your browser does not support the audio element.
-                          </audio>
-                        </div>
-                      </div>
-                    </div>
+      <div class="row justify-content-center">
+        <div class="col-lg-10 col-md-10 col-sm-12">
+          <div class="card shadow d-flex flex-column">
+            <div class="container-fluid py-5 justify-content-center text-center">
+              <div class="embed-responsive embed-responsive-16by9 mx-auto bg-light" style="height: 100px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.5); position: relative;">
+                <div class="overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); border-radius: 10px;">
+                  <div class="d-flex align-items-center justify-content-center h-100">
+                    <audio controls class="embed-responsive-item text-white" style="background-color: transparent; border:none; outline:none;">
+                      <source src="audio/track1.mp3" type="audio/mpeg">
+                      Your browser does not support the audio element.
+                    </audio>
                   </div>
-                  
-                  
-              <div class="card-body d-flex flex-column">
-                <h4 class="card-title">Playlist Title</h4>
-                <p class="card-text">Playlist Description</p>
-                <div class="list-group">
-                  <% data.forEach(function(radio, index) { %>
-                    <a href="#" class="list-group-item list-group-item-action <%= index === 1 ? 'active' : '' %>" data-src="<%= radio.url %>"><%= radio.name %></a>
-                  <% }); %>
-                  </div>
+                </div>
               </div>
+            </div>
+                  
+            <div class="card-body d-flex flex-column">
+              <h4 class="card-title" id="playlist-title">Play list Name</h4>
+              <p class="card-text">Playlist Description</p>
+              <div class="list-group">
+                <% data.forEach(function(radio, index) { %>
+                  <div class="list-group-item" <%= index === 1 ? 'active' : '' %>" data-src="<%= radio.url %>" data-name="<%= radio.name %>" data-id="<%= radio.radio_id %>">
+                    <span class="radio-name"><%= radio.name %></span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"  fill="currentColor" class="bi bi-x-circle-fill delete-radio-btn" viewBox="0 0 16 16" style="opacity: 0; transition: opacity 0.5s ease-in-out; position: absolute; right: 0; top: 50%; transform: translateY(-50%); cursor: pointer;">
+                      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+                    </svg>
+                  </div>
+                <% }); %>
+                <div class="btn-group mt-3">
+                  <a href="/addChaine&Radio" id="add-radio-btn" class="btn btn-primary" style="margin-right: 15px;">Add Radio</a>
+                  <button id="delete-radio-btn" class="btn btn-primary">Delete Radio</button>
+                   <!-- Start and Stop Recording Buttons -->
+ 
+                </div>
+                <div class="btn-group mt-3">
+
+                    <button id="start-recording-btn" class="btn btn-success" style="margin-right: 15px;">Start Recording</button>
+                    <button id="stop-recording-btn" class="btn btn-danger">Stop Recording</button>
+
+ 
+                </div>
+              
+                <div id="start-recording-alert" class="alert alert-success" style="display: none;"></div>
+                <div id="stop-recording-alert" class="alert alert-danger" style="display: none;"></div>
+                
+              
             </div>
           </div>
         </div>
       </div>
+    </div>
+
+    
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          var items = document.querySelectorAll('.list-group-item');
+          var title = document.getElementById('playlist-title');
+
+          items.forEach(function(item) {
+              item.addEventListener('click', function() {
+                  var radioName = this.getAttribute('data-name');
+                  title.textContent = radioName;
+              });
+          });
+
+      });
+
+
+    </script>
+    <script>
+
+var deleteBtnStatus = false;
+
+document.getElementById('delete-radio-btn').addEventListener('click', function() {
+  var deleteButtons = document.getElementsByClassName('delete-radio-btn');
+  deleteBtnStatus = !deleteBtnStatus;
+  for(var i = 0; i < deleteButtons.length; i++) {
+    deleteButtons[i].style.opacity = deleteBtnStatus ? "1" : "0";
+  }
+});
+
+var deleteButtons = document.getElementsByClassName('delete-radio-btn');
+
+for(var i = 0; i < deleteButtons.length; i++) {
+  deleteButtons[i].addEventListener('click', function(event) {
+    console.log('SVG clicked');
+    console.log('Parent element:', event.currentTarget.parentElement);
+
+    var chanelId = event.currentTarget.parentElement.getAttribute('data-id');
+    console.log('Channel ID:', chanelId);
+
+    fetch(`/radios/${chanelId}`, {
+      method: 'DELETE',
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error ${response.status}`);
+      }
+      window.location.reload(); // reload page to update list after deletion
+    })
+    .catch(err => {
+      console.error(err);
+    });
+  });
+}
+
+
+    </script>
 <script>
 
 
@@ -122,6 +203,16 @@ for (var i = 0; i < listItems.length; i++) {
     });
   });
 }
+
+
+
+addRadioBtn.addEventListener('click', function() {
+  console.log("Add Radio button clicked");
+  // Add your functionality for adding a radio here
+});
+
+
+
 
 </script>      
   </main>
@@ -217,6 +308,46 @@ for (var i = 0; i < listItems.length; i++) {
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="/js/argon-dashboard.min.js?v=2.0.4"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <script>
+    $(document).ready(function() {
+       // Start Recording button click event
+       $('#start-recording-btn').click(function() {
+           $.ajax({
+               url: '/start-recording',
+               type: 'POST',
+               success: function(data, status, xhr) {
+                   console.log(data);
+                   console.log(status);
+                   $('#start-recording-alert').text('Recording started').fadeIn().delay(3500).fadeOut();
+               },
+               error: function(jqXHR, textStatus, errorThrown) {
+                   console.log(textStatus);
+                   console.log(errorThrown);
+               }
+           });
+       });
+   
+       // Stop Recording button click event
+       $('#stop-recording-btn').click(function() {
+           $.ajax({
+               url: '/stop-recording',
+               type: 'POST',
+               success: function(data, status, xhr) {
+                   console.log(data);
+                   console.log(status);
+                   $('#stop-recording-alert').text('Recording stopped').fadeIn().delay(3500).fadeOut();
+               },
+               error: function(jqXHR, textStatus, errorThrown) {
+                   console.log(textStatus);
+                   console.log(errorThrown);
+               }
+           });
+       });
+   });
+   </script>
+   
 </body>
 
 </html>

@@ -14,26 +14,26 @@ const { generateToken, generateRefreshToken,logs } = require(path.join(__dirname
 exports.getAll = async (req, res, table) => {
   const query = "SELECT * FROM " + table;
   connection.query(query, (err, rows) => {
-      if (err) { 
-          console.error(err.message);
-          return res.status(500).send(message.error.serverError);
-      }
-      if (!rows) {
-          console.error(message.error.notFound+" "+ table);
-          return res.status(404).send(message.error.notFound);
-      }
+    if (err) { 
+        console.error(err.message);
+        return res.status(500).send(message.error.serverError);
+    }
+    else if (!rows) {
+        console.error(message.error.notFound+" "+ table);
+        return res.status(404).send(message.error.notFound);
+    }
+    else {
       logs(req);
-      console.log(rows)
-      // Render the index.ejs template and pass data to the admins partial
       if(table==="signals"){
-        return res.render('../views/index.ejs', { content: '../views/pages/signals', data: rows });
+        return res.render('../views/index.ejs', { content: '../views/pages/signals', data: rows ,userType: req.session.userType ,status: req.session.status});
       }
-      return res.render('../views/index.ejs', { content: '../views/pages/'+table+'s', data: rows });
+      else {
+        return res.render('../views/index.ejs', { content: '../views/pages/'+table+'s', data: rows ,userType: req.session.userType ,status: req.session.status});
+      }
+    }
+});
 
-     
-  });
 };
-
 
 
 /* -------------------------------------------------------------------------- */
@@ -57,17 +57,24 @@ exports.getById=(req,res,table,Id)=>{
 /* -------------------------------------------------------------------------- */
 /*                             get by email method                            */
 /* -------------------------------------------------------------------------- */
-exports.getByEmail=(req,res,table,capt)=>{
-    const { input } = req.params;
-    const query = "SELECT * FROM "+table+" where email=?";
-    connection.query(query,[input], (err, rows) => {
-      if (err) { 
-        console.error(err.message);
-        return res.status(500).send(message.error.serverError);
+exports.getByEmail=(email,table)=>{
+  return new Promise((resolve, reject) => {
+    const query ="SELECT * FROM "+table+" WHERE email = ?";
+    connection.query(query, [email], (err, results) => {
+      if (err) {
+        reject(err);
+        return;
       }
-      logs(req);
-      res.status(400).json(rows);
-    })
+      if (results.length === 0) {
+        resolve(null)
+        return;
+      }
+      
+      const user = results[0];
+      
+      resolve(user);
+    });
+  });
 };
 
 /* -------------------------------------------------------------------------- */
@@ -105,25 +112,29 @@ exports.deleteByName=(req,res,table)=>{
         });
 };
 
+
+
 /* -------------------------------------------------------------------------- */
 /*                             delete by id method                            */
 /* -------------------------------------------------------------------------- */
 exports.deleteById=(req,res,table,Id)=>{
     
-    const { input } = req.params;
-    const sql = "DELETE FROM "+table+" WHERE "+Id+"= ?";
-    connection.query(sql, [input],(err, result) => {
-        if (err) {
-        console.error(err.message);
-        return res.status(500).send(message.error.serverError);
-        }
-        if (result.affectedRows === 0) {
-        return res.status(404).send(message.error.notFound+" "+table);
-        }
-        logs(req);
-        res.send(message.success.delete);
-        });
+  const { input } = req.params;
+  const sql = "DELETE FROM "+table+" WHERE "+Id+"= ?";
+  connection.query(sql, [input],(err, result) => {
+      if (err) {
+          console.error(err.message);
+          return res.status(500).send(message.error.serverError);
+      }
+      if (result.affectedRows === 0) {
+          return res.status(404).send(message.error.notFound+" "+table);
+      }
+      logs(req);
+      return res.status(200).json({message: 'Delete successful'}); // send a response to the client
+  });
 };
+
+
 
 /* -------------------------------------------------------------------------- */
 /*                           delete by email method                           */
@@ -142,7 +153,7 @@ exports.deleteByEmail=(req,res,table)=>{
         return res.status(404).send(message.error.notFound+" "+table);
         }
         logs(req);
-        res.send(message.success.delete);
+        return res.json({ redirect: "/admins" });
         });
 };
 
@@ -152,18 +163,15 @@ exports.deleteByEmail=(req,res,table)=>{
 /*                          get user by email method                          */
 /* -------------------------------------------------------------------------- */
 function getUserByEmail(email,table) {
-  console.log(email,table)
       return new Promise((resolve, reject) => {
         const query ="SELECT * FROM "+table+" WHERE email = ?";
-        console.log(query)
         connection.query(query, [email], (err, results) => {
           if (err) {
             reject(err);
             return;
           }
-          console.log(results)
           if (results.length === 0) {
-            resolve(results)
+            resolve(null)
             return;
           }
           
@@ -183,14 +191,15 @@ exports.loginUser = (req, res, tables) => {
   const { email, password } = req.body;
   return new Promise(async (resolve, reject) => {
     let foundUser = null;
-    let session=null;
+    let session = null;
 
     for (const table of tables) {
       try {
         const user = await getUserByEmail(email, table.name);
         if (user) {
+          req.session.userType = table.name;
           foundUser = user;
-          session=table.sessionId;
+          session = table.sessionId;
           break;
         }
       } catch (err) {
@@ -198,63 +207,61 @@ exports.loginUser = (req, res, tables) => {
         return;
       }
     }
+
     if (!foundUser) {
       resolve(null);
       return;
     }
 
-    bcrypt.compare(password, foundUser.password, (err, result) => {
-      console.log(password+"========"+foundUser.password)
-      console.log("=========="+result)
-      if (err) {
-        reject(err);
-        return;
-      }
+    // Wrap bcrypt.compare in a Promise
+    bcrypt.compare(password, foundUser.password)
+      .then(result => {
+        if (!result) {
+          resolve(null);
+          return;
+        }
 
-      if (result) {
-        resolve(null);
-        return;
-      }
+        const token = generateToken({ id: foundUser.id, email });
+        const refreshToken = generateRefreshToken({ id: foundUser.id, email });
 
-      const token = generateToken({ id: foundUser.id, email });
-      const refreshToken = generateRefreshToken({ id: foundUser.id, email });
-      createSession(foundUser.id, refreshToken, session)
-        .then((sessionId) => {
-          resolve({
-            id: foundUser.id,
-            email: foundUser.email,
-            token,
-            refreshToken,
-            sessionId,
+        createSession(foundUser.id, refreshToken, session)
+          .then((sessionId) => {
+            resolve({
+              id: foundUser.id,
+              email: foundUser.email,
+              token,
+              refreshToken,
+              sessionId,
+            });
+
+          
+          })
+          .catch((err) => {
+            reject(err);
           });
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
+      })
+      .catch((err) => {
+        reject(err);
+      });
   });
 };
+
 
  /* -------------------------------------------------------------------------- */
  /*                               logOut method                                */
  /* -------------------------------------------------------------------------- */
-exports.logOut=(req,res,table,session)=>{
-  const {email}=req.body;
-  console.log("first")
-  getUserByEmail(email,table)
-  .then((user) => {
-    if (!user) {
-      resolve(null);
-      return;
-    }
+ exports.logOut=async (req,res)=>{
+  const Id=req.session.Id;
+ const session=req.session.userType+'_id';
+ 
+  try {
+    const deleteSession=await deleteSessionById(Id,session);
+    req.session.destroy();
+    res.render('../views/index.ejs',{ content: '../views/pages/login.ejs',data:{},userType: {},status:{}});
+  } catch (error) {
+    res.status(500).json({ error: error.toString() });
+  }
+};
 
-    console.log('hola');
-    deleteSessionById(user.id,session)
-    .then(() => {
-      res.status(200).send({ message: 'Logout successful' });
-    })
-    .catch((err) => {
-      console.error(`Error during logout: ${err}`);
-      res.status(500).send({ error: 'Internal server error' });
-    });
-  })}
+
+

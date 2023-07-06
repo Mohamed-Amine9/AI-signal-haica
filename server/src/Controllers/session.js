@@ -9,8 +9,7 @@ function createSession(userId, refreshToken,sessionId) {
 
      
        const query="INSERT INTO session ("+sessionId+", refresh_token, created_at, updated_at) VALUES (?, ?, ?, ?)";
-      
-     console.log(query)
+  
       connection.query(query, [userId, refreshToken, createdAt, updatedAt], (err, result) => {
         
         if (err) {
@@ -18,16 +17,15 @@ function createSession(userId, refreshToken,sessionId) {
           reject(err);
           return;
         }
-        console.log("d5alna")
         resolve(result.insertId);
       });
     });
   }
 
-  function deleteSessionById(id,sessionId) {
+  function deleteSessionById(Id,session) {
     return new Promise((resolve, reject) => {
-      const query = "DELETE FROM session WHERE "+sessionId+" = ?";
-      connection.query(query, [id], (err, result) => {
+      const query = "DELETE FROM session WHERE "+session+" = ?";
+      connection.query(query, [Id], (err, result) => {
         if (err) {
           reject(err);
           return;

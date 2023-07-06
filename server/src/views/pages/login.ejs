@@ -4,10 +4,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' https://kit.fontawesome.com https://buttons.github.io https://cdnjs.cloudflare.com">
+
   <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon.png">
   <link rel="icon" type="image/png" href="/img/favicon.png">
   <title>
-    Argon Dashboard 2 by Creative Tim
+    HaicaSecureEye
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -19,6 +21,7 @@
   <link href="/css/nucleo-svg.css" rel="stylesheet" />
   <!-- CSS Files -->
   <link id="pagestyle" href="/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
+  
 </head>
 
 <body class="">
@@ -26,15 +29,33 @@
     <div class="row">
       <div class="col-12 ">
         <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg blur border-radius-lg top-0 z-index-3 shadow position-absolute mt-4 py-2 start-0 end-0 mx-4 ">
-          <div class="container-fluid">
-            <a class="navbar-brand font-weight-bolder ms-lg-0 ms-0 " href="../pages/dashboard.ejs">
-              Argon Dashboard 2
-            </a>
-          
 
-          </div>
-        </nav>
+
+
+<nav class="navbar navbar-expand-lg blur border-radius-lg top-0 z-index-3 shadow position-absolute mt-4 py-2 start-0 end-0 mx-4" 
+     style="background: linear-gradient(to right, #5F64F5, #a18cd1);">
+  <div class="container-fluid">
+    <div class="navbar-brand ms-lg-0 ms-0" style="font-size: 30px; font-weight: 700; color: white;">
+      <!-- SVG design -->
+      <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="40" height="40" fill="white"
+      viewBox="0 0 172 172"
+      style=" fill:#000000;">
+      <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+      <path d="M0,172v-172h172v172z" fill="none"></path>
+      <g fill="#ffffff">
+        <path d="M86,13.76c-39.9961,0 -72.24,32.2439 -72.24,72.24c0,39.9961 32.2439,72.24 72.24,72.24c39.9961,0 72.24,-32.2439 72.24,-72.24c0,-39.9961 -32.2439,-72.24 -72.24,-72.24zM86,30.56c30.58925,0 55.44,24.85075 55.44,55.44c0,30.58925 -24.85075,55.44 -55.44,55.44c-30.58925,0 -55.44,-24.85075 -55.44,-55.44c0,-30.58925 24.85075,-55.44 55.44,-55.44zM86,57.46667c-15.73683,0 -28.53333,12.7965 -28.53333,28.53333c0,15.73683 12.7965,28.53333 28.53333,28.53333c15.73683,0 28.53333,-12.7965 28.53333,-28.53333c0,-15.73683 -12.7965,-28.53333 -28.53333,-28.53333z"></path>
+      </g>
+      </g>
+  </svg>
+     
+      <!-- End of SVG design -->
+      HaicaSecureEye
+    </div>
+  </div>
+</nav>
+
+
+   
         <!-- End Navbar -->
       </div>
     </div>
@@ -56,12 +77,13 @@
                       <%= errorMessage %>
                     </div>
                   <% } %>
-                  <form role="form" action="/login" method="POST">
+                
+                  <form id="login-form" role="form" action="/login" method="POST">
                     <div class="mb-3">
-                      <input type="email" name="email" class="form-control form-control-lg" placeholder="Email" aria-label="Email" required>
+                      <input type="email" name="email" id="email-input" class="form-control form-control-lg" placeholder="Email" aria-label="Email" required>
                     </div>
                     <div class="mb-3">
-                      <input type="password" name="password" class="form-control form-control-lg" placeholder="Password" aria-label="Password" required>
+                      <input type="password" name="password" id="password-input" class="form-control form-control-lg" placeholder="Password" aria-label="Password" required>
                     </div>
                 
                     <div class="text-center">
@@ -69,6 +91,53 @@
                     </div>
                   </form>
                 </div>
+
+
+<script src="./axios.min.js">
+                 
+function setUpAxios() {
+  const form = document.getElementById('login-form');
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const email = document.querySelector('input[name="email"]').value;
+    const password = document.querySelector('input[name="password"]').value;
+                     
+    axios.post('/login', {
+      email: email,
+      password: password
+    })
+    .then(response => {
+      console.log(response.data.status); // moved here
+      if (response.data.status==200) {
+        localStorage.setItem('token', response.data.token); // save token to local storage
+        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+        if(response.data.userType ==='admin'|| response.data.userType==='radio'){
+          location.href = '/radios';
+        } else if(response.data.userType ==='super_admin'|| response.data.userType==='signals'){
+          location.href = '/signals'; 
+        } else {
+          console.error("Login unsuccessful or token not received");
+        }
+      } else if (response.data.status == 401) {
+  const errorMessage = JSON.parse(response.data.error).error; 
+
+  alert('Login failed: ' + errorMessage);
+  location.href = '/login';
+}
+
+    })
+    .catch(error => {
+      console.error(error);
+      
+    });
+  });
+}
+
+setUpAxios();
+</script>
+
+                
+                
                 
                 </div>
               </div>

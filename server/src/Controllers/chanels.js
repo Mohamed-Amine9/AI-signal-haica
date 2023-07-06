@@ -15,7 +15,6 @@ const table={
 exports.getChanels=async(req,res)=>{
   try {
     let chanels = await central.getAll(req, res, table.name);
-
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'An error occurred while fetching the chanels' });
@@ -40,7 +39,7 @@ exports.addChanel=(req,res)=>{
         return res.status(500).send("Error occurred while inserting data.");
       }
       logs(req);
-      res.send("Data inserted successfully.");
+      res.redirect('/chanels');
     });
 };
 

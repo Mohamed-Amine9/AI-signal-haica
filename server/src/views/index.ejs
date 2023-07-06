@@ -5,7 +5,8 @@
 </head>
 <body class="g-sidenav-show   bg-gray-100">
     <%- include('./partials/header'); %>
-    <%- include(content, data); %>
+    <%- include(content, { data: data ,userType: userType ,status: status}); %> 
+
 
     <%- include('./partials/scripts'); %>   
 </body>

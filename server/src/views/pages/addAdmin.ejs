@@ -57,24 +57,8 @@
           <div class="card">
             <div class="card-header pb-0">
               <div class="d-flex align-items-center">
-                <p class="mb-0">Edit Profile</p>
-                
-                <button id="showCard" class="btn btn-primary btn-sm ms-auto">Delete Admin</button>
-             
-                <div class="overlayy" id="overlay">
-                  <div class="card-container">
-                    <div class="card" style="width: 18rem;">
-                      <div class="card-body">
-                        <h5 class="card-title">Confirmation</h5>
-                        <p class="card-text">Do you want to proceed?</p>
-                          <button id="confirm" class="btn btn-primary btn-sm ms-auto" data-email="<%= data.email %>">Yes</button>
-                        <button id="cancel" class="btn btn-danger btn-sm ms-auto">No</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <p class="mb-0">Add admin</p>
 
-                  
               </div>
             </div>
             <div class="card-body">
@@ -84,7 +68,7 @@
                   <!-- ...Your HTML above... -->
             
                   <!-- form start -->
-                  <form action="/admin/<%= encodeURIComponent(data.email) %>?_method=PUT" method="POST">
+                  <form action="/admins" method="POST">
 
                     <div class="form-group">
                       <label for="example-text-input" class="form-control-label">First Name</label>
@@ -105,6 +89,11 @@
                       <label for="example-text-input" class="form-control-label">Role</label>
                       <input class="form-control" type="text" name="role" value="<%= data.role %>">
                     </div>
+                    <div class="form-group">
+                      <label for="example-text-input" class="form-control-label">Password</label>
+                      <input class="form-control" type="text" name="password" value="<%= data.password %>">
+                  </div>
+                  
             
                     <!-- ...Your HTML below... -->
                     <button type="submit" class="btn btn-primary btn-lg ms-auto">Save</button>
@@ -198,9 +187,9 @@
       confirmButton.addEventListener('click', () => {
         overlay.style.display = 'none';
         // Send delete request here
-        const email = confirmButton.getAttribute('data-email');
-        fetch(`/admins/${encodeURIComponent(email)}`, {
-          method: 'DELETE',
+       
+        fetch('/admins', {
+          method: 'POST',
         })
         .then(response => {
           if (!response.ok) {

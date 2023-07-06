@@ -8,16 +8,16 @@ name:"signals",
 id:"signal_id"
 };
 
-exports.getSignals=async (req,res)=>{
-  try{
-    let signals;
-    signals= await central.getAll(req,res,table.name);
+exports.getSignals = async (req, res) => {
+  try {
+    const signals = await central.getAll(req, res, "signals");
 
-  }catch (err) {
+  } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'An error occurred while fetching the signals' });
   }
-};  
+};
+
 
 exports.getSignal=(req,res)=>{
     return central.getById(req,res,table.name,table.id);
@@ -37,4 +37,5 @@ exports.addSignal=(req,res)=>{
 };
 exports.deleteSignal=(req,res)=>{
    central.deleteById(req,res,table.name,table.id);
+  //res.redirect('/signals');
 };

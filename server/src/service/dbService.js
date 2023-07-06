@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS chanel (
   const signals=`
   CREATE TABLE IF NOT EXISTS Signals(
   signal_id INT AUTO_INCREMENT PRIMARY KEY,
-  date DATE ,
+  date VARCHAR(255) ,
   description VARCHAR(255) )`;
 
   const post=`
@@ -102,35 +102,35 @@ CREATE TABLE IF NOT EXISTS chanel (
   );`;
   connection.query(user, (err, result) => {
     if (err) throw err;
-    console.log('Table users created');
+    
   });
   connection.query(admin, (err, result) => {
     if (err) throw err;
-    console.log('Table admin created');
+   
   });
   connection.query(super_admin, (err, result) => {
     if (err) throw err;
-    console.log('Table super_admin created');
+    
   });
   connection.query(radio, (err, result) => {
     if (err) throw err;
-    console.log('Table radios created');
+   
   });
   connection.query(chanel, (err, result) => {
     if (err) throw err;
-    console.log('Table chanels created');
+   
   });
   connection.query(post, (err, result) => {
     if (err) throw err;
-    console.log('Table posts created');
+   
   });
   connection.query(signals, (err, result) => {
     if (err) throw err;
-    console.log('Table signal created');
+    
   });
   connection.query(session, (err, result) => {
     if (err) throw err;
-    console.log('Table session created');
+   console.log('🔥🔥')
   });
   
 

@@ -21,7 +21,7 @@
   <!-- CSS Files -->
   <link id="pagestyle" href="/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
   
-</head>
+</head> 
 
 <body class="g-sidenav-show bg-gray-100">
   <div class="position-absolute w-100 min-height-300 top-0" style="background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/profile-layout-header.jpg'); background-position-y: 50%;">
@@ -57,58 +57,39 @@
           <div class="card">
             <div class="card-header pb-0">
               <div class="d-flex align-items-center">
-                <p class="mb-0">Edit Profile</p>
+                <p class="mb-0">Add </p>
                 
-                <button id="showCard" class="btn btn-primary btn-sm ms-auto">Delete Admin</button>
-             
-                <div class="overlayy" id="overlay">
-                  <div class="card-container">
-                    <div class="card" style="width: 18rem;">
-                      <div class="card-body">
-                        <h5 class="card-title">Confirmation</h5>
-                        <p class="card-text">Do you want to proceed?</p>
-                          <button id="confirm" class="btn btn-primary btn-sm ms-auto" data-email="<%= data.email %>">Yes</button>
-                        <button id="cancel" class="btn btn-danger btn-sm ms-auto">No</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
 
-                  
               </div>
             </div>
             <div class="card-body">
-              <p class="text-uppercase text-sm">Admin Informations</p>
+              <p class="text-uppercase text-sm">Informations</p>
               <div class="row">
                 <div class="col-md-6">
                   <!-- ...Your HTML above... -->
             
                   <!-- form start -->
-                  <form action="/admin/<%= encodeURIComponent(data.email) %>?_method=PUT" method="POST">
+                  <form action="/radios" method="POST">
 
                     <div class="form-group">
-                      <label for="example-text-input" class="form-control-label">First Name</label>
-                      <input class="form-control" type="text" name="firstName" value="<%= data.firstName %>">
+                      <label for="example-text-input" class="form-control-label">Name</label>
+                      <input class="form-control" type="text" name="name" value="<%= data.name %>">
                     </div>
-            
+                  
                     <div class="form-group">
-                      <label for="example-text-input" class="form-control-label">Last Name</label>
-                      <input class="form-control" type="text" name="lastName" value="<%= data.lastName %>">
+                      <label for="example-text-input" class="form-control-label">URL</label>
+                      <input class="form-control" type="text" name="url" value="<%= data.url %>">
                     </div>
-            
+                  
                     <div class="form-group">
-                      <label for="example-text-input" class="form-control-label">Email address</label>
-                      <input class="form-control" type="email" name="email" value="<%= data.email %>">
+                      <label for="example-text-input" class="form-control-label">Description</label>
+                      <input class="form-control" type="text" name="description" value="<%= data.description %>">
                     </div>
-            
-                    <div class="form-group">
-                      <label for="example-text-input" class="form-control-label">Role</label>
-                      <input class="form-control" type="text" name="role" value="<%= data.role %>">
-                    </div>
-            
+                  
                     <!-- ...Your HTML below... -->
                     <button type="submit" class="btn btn-primary btn-lg ms-auto">Save</button>
                   </form>
+                  
                   <!-- form end -->
             
                 </div>
@@ -198,9 +179,9 @@
       confirmButton.addEventListener('click', () => {
         overlay.style.display = 'none';
         // Send delete request here
-        const email = confirmButton.getAttribute('data-email');
-        fetch(`/admins/${encodeURIComponent(email)}`, {
-          method: 'DELETE',
+       
+        fetch('/radios', {
+          method: 'POST',
         })
         .then(response => {
           if (!response.ok) {

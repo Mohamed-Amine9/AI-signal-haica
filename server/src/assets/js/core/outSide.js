@@ -28,11 +28,9 @@
   });
 
 
-
   document.addEventListener('DOMContentLoaded', () => {
     const searchBar = document.getElementById('searchBar');
     const searchButton = document.getElementById('searchButton');
-    const results = document.getElementById('results');
     const radioStations = document.querySelectorAll('.list-group-item');
 
     searchButton.addEventListener('click', performRadioSearch);
@@ -45,6 +43,7 @@
                 searchBar.focus();
                 searchBar.value = searchBar.value.slice(0, searchBar.selectionStart) + key + searchBar.value.slice(searchBar.selectionEnd);
                 searchBar.selectionEnd = searchBar.selectionStart;
+                event.preventDefault();  // prevent the browser's default action
             }
         } else if (key === 'Enter') {
             performRadioSearch();
@@ -63,5 +62,6 @@
         });
     }
 });
+
 
 
